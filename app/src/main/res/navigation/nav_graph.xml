@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/drinksFragment">
+
+    <fragment
+        android:id="@+id/drinksFragment"
+        android:name="ro.dev.cocktaildb.ui.screens.drinks.DrinksFragment"
+        android:label="Drinks"
+        tools:layout="@layout/drinks_fragment" >
+        <action
+            android:id="@+id/action_drinksFragment_to_filtersFragment"
+            app:destination="@id/filtersFragment" />
+        <argument
+            android:name="Categories"
+            app:argType="ro.dev.cocktaildb.data.model.filter.CategoryDrink[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/filtersFragment"
+        android:name="ro.dev.cocktaildb.ui.screens.filters.FiltersFragment"
+        android:label="Filters"
+        tools:layout="@layout/filters_fragment" >
+        <action
+            android:id="@+id/action_filtersFragment_to_drinksFragment"
+            app:destination="@id/drinksFragment" />
+    </fragment>
+</navigation>
