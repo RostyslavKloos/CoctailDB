@@ -6,39 +6,53 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ro.dev.cocktaildb.data.model.filter.CategoryDrink
 import ro.dev.cocktaildb.databinding.ItemCategoryBinding
+import ro.dev.cocktaildb.ui.screens.drinks.DrinksViewModel
 
-class FiltersAdapter(private val categoriesList: List<CategoryDrink>, private val listener: SelectItemListener): RecyclerView.Adapter<CategoryViewHolder>() {
+class FiltersAdapter(private val categoriesList: List<CategoryDrink>, private val listener: SelectItemListener,
+                     private val viewModel: DrinksViewModel): RecyclerView.Adapter<FiltersAdapter.CategoryViewHolder>() {
 
     interface SelectItemListener {
-        fun onClickCategory(view:View, categoryDrink: CategoryDrink)
+        fun onClickCategory(view: View, categoryDrink: CategoryDrink)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
 
-        val binding: ItemCategoryBinding = ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding: ItemCategoryBinding =
+            ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CategoryViewHolder(binding, listener)
     }
 
-    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) =  holder.bind(categoriesList[position])
+    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) =
+        holder.bind(categoriesList[position])
 
     override fun getItemCount(): Int = categoriesList.size
-}
 
-class CategoryViewHolder(private val itemBinding: ItemCategoryBinding, private val listener: FiltersAdapter.SelectItemListener):
-    RecyclerView.ViewHolder(itemBinding.root), View.OnClickListener{
 
-    init {
-        itemBinding.root.setOnClickListener(this)
-    }
+   inner class CategoryViewHolder(
+        private val itemBinding: ItemCategoryBinding,
+        private val listener: SelectItemListener
+    ) :
+        RecyclerView.ViewHolder(itemBinding.root), View.OnClickListener {
 
-    private lateinit var categoryDrink: CategoryDrink
+        init {
+            itemBinding.root.setOnClickListener(this)
+        }
 
-    fun bind(categoryDrink: CategoryDrink) {
-        this.categoryDrink = categoryDrink
-        itemBinding.tvCategoryName.text = categoryDrink.strCategory
-    }
+        private lateinit var categoryDrink: CategoryDrink
 
-    override fun onClick(v: View?) {
-        listener.onClickCategory(itemBinding.ivSelectCategory, categoryDrink)
+        fun bind(categoryDrink: CategoryDrink) {
+
+            this.categoryDrink = categoryDrink
+            itemBinding.tvCategoryName.text = categoryDrink.strCategory
+            if(viewModel.filterMap.containsKey(categoryDrink.strCategory) && viewModel.filterMap.getValue(categoryDrink.strCategory)) {
+                itemBinding.ivSelectCategory.visibility = View.VISIBLE
+            } else if (viewModel.filterMap.containsKey(categoryDrink.strCategory) && !viewModel.filterMap.getValue(categoryDrink.strCategory)){
+                itemBinding.ivSelectCategory.visibility = View.INVISIBLE
+            }
+        }
+
+        override fun onClick(v: View?) {
+            listener.onClickCategory(itemBinding.ivSelectCategory, categoryDrink)
+        }
     }
 }

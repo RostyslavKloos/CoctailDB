@@ -1,6 +1,7 @@
 package ro.dev.cocktaildb.ui.screens.drinks
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +18,21 @@ class DrinksViewModel : ViewModel() {
     private val remoteDataSource = RemoteDataSource(retrofitService)
     private val repository: Repository = Repository(remoteDataSource)
 
+    //Filter Fragment
+    private val _filterListt = MutableLiveData<ArrayList<CategoryDrink>>()
+    val filterListt get() = _filterListt
+
+    val filterMap: MutableMap<String,Boolean> = mutableMapOf()
+    val filterList: ArrayList<CategoryDrink> = ArrayList()
+
+    fun setFilterList(filterList: ArrayList<CategoryDrink>) {
+        _filterListt.value?.clear()
+        _filterListt.postValue(filterList)
+    }
+
+    val filters = repository.getFilters()
+
+    //Drinks Fragment
     suspend fun multipleDrinksRequest(categories: Array<CategoryDrink>): ArrayList<DrinksListResponseModel>{
         val array = ArrayList<DrinksListResponseModel>()
         withContext(CoroutineScope(Dispatchers.Default).coroutineContext) {
@@ -33,4 +49,5 @@ class DrinksViewModel : ViewModel() {
         }
         return array
     }
+
 }

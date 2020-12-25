@@ -27,6 +27,6 @@ class DrinkItemAdapter(private val drink: DrinksListResponseModel):
 
 class DrinkItemViewHolder(itemBinding: ItemDrinkProductBinding):
     RecyclerView.ViewHolder(itemBinding.root) {
-        val tvDescription = itemBinding.tvDrinkDescription
+    val tvDescription = itemBinding.tvDrinkDescription
     val ivDrink = itemBinding.ivDrinkImage
 }
